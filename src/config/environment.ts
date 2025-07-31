@@ -11,6 +11,6 @@
  * ############################################################################### *
  */
 
-import { IEnvironment } from '../common/interface/environment'
+import { IEnvironment } from '@/common'
 
 export const ENVIRONMENT: IEnvironment = {}
