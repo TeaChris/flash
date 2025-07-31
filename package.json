@@ -7,7 +7,8 @@
   "type": "commonjs",
   "main": "server.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node-dev --respawn --transpile-only --project tsconfig.json --require tsconfig-paths/register src/server.ts"
   },
   "dependencies": {
     "compression": "^1.8.1",
