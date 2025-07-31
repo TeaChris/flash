@@ -13,4 +13,11 @@
 
 import { IEnvironment } from '@/common'
 
-export const ENVIRONMENT: IEnvironment = {}
+export const ENVIRONMENT: IEnvironment = {
+  APP: {
+    ENV: process.env.NODE_ENV,
+    NAME: process.env.APP_NAME,
+    CLIENT: process.env.CLIENT as string,
+    PORT: parseInt(process.env.PORT || process.env.APP_PORT || '3000'),
+  },
+}
