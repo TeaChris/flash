@@ -15,13 +15,7 @@ import compression from 'compression'
 import cookieParser from 'cookie-parser'
 import rateLimit from 'express-rate-limit'
 import helmet, { HelmetOptions } from 'helmet'
-import express, {
-  Express,
-  Application,
-  NextFunction,
-  Request,
-  Response,
-} from 'express'
+import express, { Application, NextFunction, Request, Response } from 'express'
 import mongoSanitize from 'express-mongo-sanitize'
 
 import { logger, stream } from '@/common'
@@ -48,8 +42,6 @@ process.on('uncaughtException', async (error: Error) => {
  *  Default app configuration
  */
 const app: Application = express()
-const port = ENVIRONMENT.APP.PORT
-const appName = ENVIRONMENT.APP.NAME
 
 /**
  *  Express Configuration
@@ -202,3 +194,5 @@ app.all('/*', async (req: Request, res: Response) => {
     } route. Check the API documentation for more details.`,
   })
 })
+
+export default app
