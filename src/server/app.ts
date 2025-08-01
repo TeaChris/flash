@@ -26,6 +26,7 @@ import mongoSanitize from 'express-mongo-sanitize'
 
 import { logger, stream } from '@/common'
 import { ENVIRONMENT } from '@/config'
+import { validateDataWithZod } from '@/middlewares'
 // import { errorHandler } from './middlewares/errorHandler'
 // import routes from './routes'
 
@@ -178,4 +179,26 @@ app.use(
 app.use((req: Request, res: Response, next: NextFunction) => {
   req.requestTime = new Date().toISOString()
   next()
+})
+
+/**
+ * Initialize routes
+ */
+app.use(validateDataWithZod)
+app.use('/api/v1/alive', (req: Request, res: Response) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'Server is running',
+  })
+})
+// other routes here
+
+app.all('/*', async (req: Request, res: Response) => {
+  logger.error('route not found' + new Date(Date.now()) + ' ' + req.originalUrl)
+  res.status(404).json({
+    status: 'error',
+    message: `OOPs!! No handler defined for ${req.method.toUpperCase()}: ${
+      req.url
+    } route. Check the API documentation for more details.`,
+  })
 })
