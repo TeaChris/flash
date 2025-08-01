@@ -25,9 +25,15 @@ const server = http.createServer(app)
 
 const appServer = server.listen(port, async () => {
   // await db()
-  console.log('=>' + appName + 'app is listening on port ' + port + '!')
+  logger.info(`🚀 ${appName} is listening on port ${port}`)
   //   put queue workers here
 })
+
+/**
+ * Error handler middlewares
+ */
+app.use(timeoutMiddleware)
+app.use(errorHandler)
 
 /**
  * unhandledRejection  handler
@@ -37,11 +43,10 @@ process.on('unhandledRejection', async (error: Error) => {
   console.log('UNHANDLED REJECTION! 💥 Server Shutting down...')
   console.log(error.name, error.message)
   logger.error(
-    'UNHANDLED REJECTION! 💥 Server Shutting down... ' +
-      new Date(Date.now()) +
-      error.name,
-    error.message
+    `UNHANDLED REJECTION! 💥 Server Shutting down... [${new Date().toISOString()}]`,
+    { error }
   )
+
   // await stopAllQueuesAndWorkers();
   appServer.close(() => {
     process.exit(1)
