@@ -10,10 +10,11 @@ import hpp from 'hpp'
 import cors from 'cors'
 import morgan from 'morgan'
 import xss from 'xss-clean'
-import helmet from 'helmet'
+import helmetCsp from 'helmet-csp'
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
 import rateLimit from 'express-rate-limit'
+import helmet, { HelmetOptions } from 'helmet'
 import express, { Express, Application } from 'express'
 import mongoSanitize from 'express-mongo-sanitize'
 
@@ -47,20 +48,93 @@ const appName = ENVIRONMENT.APP.NAME
  *  Express Configuration
  */
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal']) // trust proxy for rate limit
-app.use(express.urlencoded({ extended: true, limit: '50mb' }))
+app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 app.use(express.json({ limit: '10kb' }))
 app.use(cookieParser())
 
-app.set('trust proxy', 1)
+/**
+ * Compression Middleware
+ */
+app.use(compression())
+
+/**
+ * Rate limiter
+ */
+app.use(
+  rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, //Limit each IP to 100 request
+    message: 'Too many requests, please try again later.',
+  })
+)
+
+/**
+ * Middleware to allow CORS
+ */
+app.use(
+  cors({
+    origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+    credentials: true,
+  })
+)
+
+/**
+ * Configure content security policy (CSP) ==> Prevent cross-site scripting (XSS)
+ */
+const contentSecurityPolicy = {
+  directive: {
+    baseUri: ["'self'"],
+    objectSrc: ["'none'"],
+    defaultSrc: ["'self'"],
+    frameAncestors: ["'none'"],
+    upgradeInsecureRequests: [],
+    imgSrc: ["'self'", 'data:', 'https:'],
+    scriptSrc: ["'self'", "'unsafe-inline'"],
+    styleSrc: ["'self'", "'unsafe-inline'"],
+    connectSrc: ["'self'", 'https://api.mapbox.com'],
+    fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+  },
+}
+
+/**
+ * Use Helmet middleware for security headers
+ */
+app.use(
+  helmet({
+    contentSecurityPolicy: false, //Disable the default CSP middleware
+  })
+)
+// Use helmet-csp middleware for Content Security Policy
+app.use(
+  helmetCsp({
+    directives: {
+      baseUri: ["'self'"],
+      objectSrc: ["'none'"],
+      defaultSrc: ["'self'"],
+      frameAncestors: ["'none'"],
+      upgradeInsecureRequests: [],
+      imgSrc: ["'self'", 'data:', 'https:'],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      connectSrc: ["'self'", 'https://api.mapbox.com'],
+      fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+    },
+  })
+)
+
+const helmetConfig: HelmetOptions = {
+  // X-Frame-Options header to prevent clickjacking
+  frameguard: { action: 'deny' },
+  // X-XSS-Protection header to enable browser's built-in XSS protection
+  xssFilter: true,
+  // Referrer-Policy header
+  referrerPolicy: { policy: 'strict-origin' },
+  // Strict-Transport-Security (HSTS) header for HTTPS enforcement
+  hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
+}
+
+app.use(helmet(helmetConfig))
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 }
-
-app.use(
-  rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
-    message: 'Too many requests, please try again later.',
-  })
-)
