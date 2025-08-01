@@ -15,10 +15,16 @@ import compression from 'compression'
 import cookieParser from 'cookie-parser'
 import rateLimit from 'express-rate-limit'
 import helmet, { HelmetOptions } from 'helmet'
-import express, { Express, Application } from 'express'
+import express, {
+  Express,
+  Application,
+  NextFunction,
+  Request,
+  Response,
+} from 'express'
 import mongoSanitize from 'express-mongo-sanitize'
 
-import { logger } from '@/common'
+import { logger, stream } from '@/common'
 import { ENVIRONMENT } from '@/config'
 // import { errorHandler } from './middlewares/errorHandler'
 // import routes from './routes'
@@ -162,6 +168,14 @@ app.use(
   })
 )
 
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'))
-}
+/**
+ * Logger Middleware
+ */
+app.use(
+  morgan(ENVIRONMENT.APP.ENV !== 'development' ? 'combined' : 'dev', { stream })
+)
+// add request time to req object
+app.use((req: Request, res: Response, next: NextFunction) => {
+  req.requestTime = new Date().toISOString()
+  next()
+})
