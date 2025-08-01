@@ -135,6 +135,33 @@ const helmetConfig: HelmetOptions = {
 
 app.use(helmet(helmetConfig))
 
+/**
+ * Secure cookies and other helmet-related configurations
+ */
+app.use(helmet.noSniff())
+app.use(helmet.ieNoOpen())
+app.use(helmet.hidePoweredBy())
+app.use(helmet.dnsPrefetchControl())
+app.use(helmet.permittedCrossDomainPolicies())
+app.use(helmet.frameguard({ action: 'deny' }))
+// Prevent browser from caching sensitive information
+app.use((req, res, next) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private')
+  res.set('Pragma', 'no-cache')
+  res.set('Expires', '0')
+  next()
+})
+// Data sanitization against NoSQL query injection
+app.use(mongoSanitize())
+// Data sanitization against XSS
+app.use(xss())
+// Prevent parameter pollution
+app.use(
+  hpp({
+    whitelist: ['date', 'createdAt'], // whitelist some parameters
+  })
+)
+
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 }
