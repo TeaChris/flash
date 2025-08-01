@@ -18,6 +18,7 @@
     "express": "^5.1.0",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^8.0.1",
+    "google-libphonenumber": "^3.2.42",
     "helmet": "^8.1.0",
     "helmet-csp": "^4.0.0",
     "hpp": "^0.2.3",
@@ -26,6 +27,7 @@
     "morgan": "^1.10.1",
     "rate-limiter-flexible": "^7.2.0",
     "socket.io": "^4.8.1",
+    "ts-custom-error": "^3.3.1",
     "winston": "^3.17.0",
     "xss-clean": "^0.1.4",
     "zod": "^4.0.14"
