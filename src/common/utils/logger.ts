@@ -21,7 +21,7 @@ const logFormat = format.combine(
   format.json()
 )
 
-const logger = createLogger({
+export const logger = createLogger({
   level: 'info',
   format: logFormat,
   defaultMeta: { service: 'data-api' },
@@ -53,4 +53,8 @@ if (process.env.NODE_ENV !== 'production') {
   )
 }
 
-export { logger }
+export const stream = {
+  write: (message: string) => {
+    logger.info(message.trim())
+  },
+}
