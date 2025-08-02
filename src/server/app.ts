@@ -19,11 +19,9 @@ import express, { Application, NextFunction, Request, Response } from 'express'
 import mongoSanitize from 'express-mongo-sanitize'
 
 import { logger, stream } from '@/common'
-import { ENVIRONMENT } from '@/config'
-import { timeoutMiddleware, validateDataWithZod } from '@/middlewares'
 import { errorHandler } from '@/controllers'
-// import { errorHandler } from './middlewares/errorHandler'
-// import routes from './routes'
+import { ENVIRONMENT, stopRedisConnections } from '@/config'
+import { timeoutMiddleware, validateDataWithZod } from '@/middlewares'
 
 dotenv.config()
 
@@ -34,8 +32,8 @@ process.on('uncaughtException', async (error: Error) => {
   console.log('UNCAUGHT EXCEPTION!! 💥 Server Shutting down...')
   console.log(error.name, error.message)
   logger.error('UNCAUGHT EXCEPTION!! 💥 Server Shutting down...', error)
-  // add function to stop queue workers here
-  // await stopQueueWorkers()
+  // Close Redis connections
+  await stopRedisConnections()
   process.exit(1)
 })
 
