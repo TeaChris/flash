@@ -20,7 +20,8 @@ import mongoSanitize from 'express-mongo-sanitize'
 
 import { logger, stream } from '@/common'
 import { ENVIRONMENT } from '@/config'
-import { validateDataWithZod } from '@/middlewares'
+import { timeoutMiddleware, validateDataWithZod } from '@/middlewares'
+import { errorHandler } from '@/controllers'
 // import { errorHandler } from './middlewares/errorHandler'
 // import routes from './routes'
 
@@ -174,16 +175,23 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 })
 
 /**
+ * Error handler middlewares
+ */
+app.use(timeoutMiddleware)
+
+/**
  * Initialize routes
  */
 app.use(validateDataWithZod)
 app.use('/api/v1/alive', (req: Request, res: Response) => {
   res.status(200).json({
     status: 'success',
-    message: 'Server is running',
+    message: 'Server is running!',
   })
 })
 // other routes here
+
+app.use(errorHandler)
 
 app.all('/*', async (req: Request, res: Response) => {
   logger.error('route not found' + new Date(Date.now()) + ' ' + req.originalUrl)
