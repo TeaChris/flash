@@ -15,9 +15,10 @@ import http from 'http'
 import app from './server/app'
 import { logger } from '@/common'
 import { ENVIRONMENT } from './config'
-import { errorHandler } from '@/controllers'
-import { timeoutMiddleware } from './middlewares'
+
 import { db } from './database'
+import { stopRedisConnections } from './config/redis'
+import { startQueueWorkers } from './utils/redis-example'
 
 const port = ENVIRONMENT.APP.PORT
 const appName = ENVIRONMENT.APP.NAME
@@ -26,8 +27,9 @@ const server = http.createServer(app)
 
 const appServer = server.listen(port, async () => {
   await db()
+  // Initialize Redis queue workers
+  await startQueueWorkers()
   logger.info(`🚀 ${appName} is listening on port ${port}`)
-  //   put queue workers here
 })
 
 /**
@@ -42,8 +44,25 @@ process.on('unhandledRejection', async (error: Error) => {
     { error }
   )
 
-  // await stopAllQueuesAndWorkers();
+  // Close Redis connections
+  await stopRedisConnections()
+
   appServer.close(() => {
     process.exit(1)
+  })
+})
+
+/**
+ * Handle SIGTERM signal
+ */
+process.on('SIGTERM', async () => {
+  logger.info('SIGTERM RECEIVED. Shutting down gracefully')
+
+  // Close Redis connections
+  await stopRedisConnections()
+
+  appServer.close(() => {
+    logger.info('Process terminated!')
+    process.exit(0)
   })
 })
