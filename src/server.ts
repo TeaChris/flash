@@ -17,7 +17,7 @@ import { logger } from '@/common'
 import { ENVIRONMENT } from './config'
 
 import { db } from './database'
-import { stopRedisConnections } from './config/redis'
+import { stopRedisConnections } from '@/config'
 import { startQueueWorkers } from './utils/redis-example'
 
 const port = ENVIRONMENT.APP.PORT
