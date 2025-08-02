@@ -19,9 +19,8 @@ import { logger } from '@/common'
 const createRedisClient = () => {
   try {
     // Check if Redis URL is defined
-    const redisUrl = process.env.REDIS_URL || process.env.QUEUE_REDIS_URL
-    const redisPassword =
-      process.env.REDIS_PASSWORD || process.env.QUEUE_REDIS_PASSWORD
+    const redisUrl = ENVIRONMENT.REDIS.URL
+    const redisPassword = ENVIRONMENT.REDIS.PASSWORD
 
     if (!redisUrl) {
       logger.warn(
@@ -52,9 +51,7 @@ const createRedisClient = () => {
       })
     } else {
       // Standard Redis connection
-      const redisPort = parseInt(
-        process.env.REDIS_PORT || process.env.QUEUE_REDIS_PORT || '6379'
-      )
+      const redisPort = ENVIRONMENT.REDIS.PORT || 6379
       client = new Redis({
         host: redisUrl,
         port: redisPort,
@@ -88,9 +85,8 @@ const createRedisClient = () => {
 const createCacheClient = () => {
   try {
     // Check if Cache Redis URL is defined
-    const cacheRedisUrl = process.env.CACHE_REDIS_URL
-    const cacheRedisPassword =
-      process.env.CACHE_REDIS_PASSWORD || process.env.QUEUE_REDIS_PASSWORD
+    const cacheRedisUrl = ENVIRONMENT.CACHE_REDIS.URL
+    const cacheRedisPassword = ENVIRONMENT.REDIS.PASSWORD
 
     if (!cacheRedisUrl) {
       logger.warn(
