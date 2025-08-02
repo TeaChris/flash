@@ -23,4 +23,12 @@ export const ENVIRONMENT: IEnvironment = {
   DB: {
     URL: process.env.DATABASE_URL as string,
   },
+  CACHE_REDIS: {
+    URL: process.env.CACHE_REDIS_URL as string,
+  },
+  REDIS: {
+    URL: process.env.REDIS_URL as string,
+    PORT: parseInt(process.env.REDIS_PORT || '6379'),
+    PASSWORD: process.env.REDIS_PASSWORD as string,
+  },
 }
