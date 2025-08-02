@@ -21,12 +21,12 @@ export interface IEnvironment {
   DB: {
     URL: string
   }
-  //   REDIS: {
-  //     URL: string
-  //     PORT: number
-  //     PASSWORD: string
-  //   }
-  //   CACHE_REDIS: {
-  //     URL: string
-  //   }
+  REDIS: {
+    URL: string
+    PORT: number
+    PASSWORD: string
+  }
+  CACHE_REDIS: {
+    URL: string
+  }
 }
