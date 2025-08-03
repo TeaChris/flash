@@ -8,9 +8,11 @@
   "main": "server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev --respawn --transpile-only --project tsconfig.json --require tsconfig-paths/register src/server.ts"
+    "dev": "ts-node-dev --respawn --transpile-only --project tsconfig.json --require tsconfig-paths/register src/server.ts",
+    "test:bullmq": "ts-node --project tsconfig.json --require tsconfig-paths/register src/test-bullmq.ts"
   },
   "dependencies": {
+    "bullmq": "^5.56.9",
     "compression": "^1.8.1",
     "connect-timeout": "^1.9.1",
     "cookie-parser": "^1.4.7",
