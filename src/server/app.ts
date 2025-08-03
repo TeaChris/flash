@@ -18,7 +18,7 @@ import helmet, { HelmetOptions } from 'helmet'
 import express, { Application, NextFunction, Request, Response } from 'express'
 import mongoSanitize from 'express-mongo-sanitize'
 
-import { logger, stream } from '@/common'
+import { logger, stream, stopQueueWorkers } from '@/common'
 import { errorHandler } from '@/controllers'
 import { ENVIRONMENT, stopRedisConnections } from '@/config'
 import { timeoutMiddleware, validateDataWithZod } from '@/middlewares'
@@ -34,6 +34,9 @@ process.on('uncaughtException', async (error: Error) => {
   logger.error('UNCAUGHT EXCEPTION!! 💥 Server Shutting down...', error)
   // Close Redis connections
   await stopRedisConnections()
+
+  // Stop queue workers
+  await stopQueueWorkers()
   process.exit(1)
 })
 
@@ -112,10 +115,10 @@ app.use(
       frameAncestors: ["'none'"],
       upgradeInsecureRequests: [],
       imgSrc: ["'self'", 'data:', 'https:'],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
-      connectSrc: ["'self'", 'https://api.mapbox.com'],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
       fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+      connectSrc: ["'self'", 'https://api.mapbox.com'],
     },
   })
 )
