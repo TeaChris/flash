@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+# This pre-commit hook can be used for linting or other checks
+# For now, we'll use a simple echo command to avoid blocking commits
+echo "Pre-commit hook executed successfully"
