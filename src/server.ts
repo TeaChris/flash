@@ -18,7 +18,7 @@ import { ENVIRONMENT } from './config'
 
 import { db } from './database'
 import { stopRedisConnections } from '@/config'
-import { startQueueWorkers } from './common/utils/redis-example'
+import { startQueueWorkers, stopQueueWorkers } from '@/common/utils/queue'
 
 const port = ENVIRONMENT.APP.PORT
 const appName = ENVIRONMENT.APP.NAME
@@ -46,6 +46,9 @@ process.on('unhandledRejection', async (error: Error) => {
 
   // Close Redis connections
   await stopRedisConnections()
+  
+  // Stop queue workers
+  await stopQueueWorkers()
 
   appServer.close(() => {
     process.exit(1)
