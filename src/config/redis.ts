@@ -12,8 +12,8 @@
  */
 
 import Redis from 'ioredis'
-import { ENVIRONMENT } from './environment'
 import { logger } from '@/common'
+import { ENVIRONMENT } from './environment'
 
 // Redis client for general purpose
 const createRedisClient = () => {
