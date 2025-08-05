@@ -3,7 +3,7 @@
  * Created Date: Fr Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Fri Aug 01 2025                                              *
+ * Last Modified: Sun Aug 03 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -31,9 +31,7 @@ export enum VerifyTimeBased2faTypeEnum {
   DISABLE_2FA = 'DISABLE_2FA',
 }
 
-export enum Gender {
-  MALE = 'male',
-  FEMALE = 'female',
-  OTHER = 'other',
-  NONE = 'none',
+export enum Role {
+  ADMIN = 'ADMIN',
+  USER = 'USER',
 }
