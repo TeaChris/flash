@@ -3,7 +3,7 @@
  * Created Date: Su Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Sun Aug 03 2025                                              *
+ * Last Modified: Tue Aug 05 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -27,4 +27,5 @@ export interface IUser {
   isSuspended: boolean;
   refreshToken: string;
   isEmailVerified: boolean;
+  isTermAndConditionAccepted: boolean;
 }
