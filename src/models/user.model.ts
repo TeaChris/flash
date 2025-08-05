@@ -3,7 +3,7 @@
  * Created Date: Su Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Mon Aug 04 2025                                              *
+ * Last Modified: Tue Aug 05 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -74,6 +74,11 @@ const userSchema = new mongoose.Schema<IUser, unknown>(
       type: String,
       enum: Object.values(Role),
       default: Role.USER,
+    },
+    isTermAndConditionAccepted: {
+      type: Boolean,
+      default: false,
+      required: [true, 'Term and condition is required'],
     },
   },
   {
