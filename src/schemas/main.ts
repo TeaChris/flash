@@ -3,7 +3,7 @@
  * Created Date: Fr Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Fri Aug 01 2025                                              *
+ * Last Modified: Tue Aug 05 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -17,25 +17,20 @@
 //   VerifyTimeBased2faTypeEnum,
 //   twoFactorTypeEnum,
 // } from '@/common/constants'
-import { dateFromString } from '@/common'
-import {
-  Country,
-  Gender,
-  twoFactorTypeEnum,
-  VerifyTimeBased2faTypeEnum,
-} from '@/common/constants'
-import { PhoneNumberUtil } from 'google-libphonenumber'
-import * as z from 'zod'
+import { dateFromString } from '@/common';
+import { Country, twoFactorTypeEnum, VerifyTimeBased2faTypeEnum } from '@/common/constants';
+import { PhoneNumberUtil } from 'google-libphonenumber';
+import * as z from 'zod';
 
 const verifyPhoneNumber = (value: string) => {
-  const phoneUtil = PhoneNumberUtil.getInstance()
-  if (!value.includes('234') || value.includes('+')) return false
-  const number = phoneUtil.parse(`+${value}`, 'NG')
-  return phoneUtil.isValidNumber(number)
-}
+  const phoneUtil = PhoneNumberUtil.getInstance();
+  if (!value.includes('234') || value.includes('+')) return false;
+  const number = phoneUtil.parse(`+${value}`, 'NG');
+  return phoneUtil.isValidNumber(number);
+};
 
 const passwordRegexMessage =
-  'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character or symbol'
+  'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character or symbol';
 
 export const mainSchema = z.object({
   firstName: z
@@ -43,28 +38,22 @@ export const mainSchema = z.object({
     .min(2, 'First name must be at least 2 characters long')
     .max(50, 'First name must not be 50 characters long')
     .refine(
-      (name) =>
-        /^(?!.*-[a-z])[A-Z][a-z'-]*(?:-[A-Z][a-z'-]*)*(?:'[A-Z][a-z'-]*)*$/g.test(
-          name
-        ),
+      (name) => /^(?!.*-[a-z])[A-Z][a-z'-]*(?:-[A-Z][a-z'-]*)*(?:'[A-Z][a-z'-]*)*$/g.test(name),
       {
         message:
           'First name must be in sentence case, can include hyphen, and apostrophes (e.g., "Ali", "Ade-Bright" or "Smith\'s").',
-      }
+      },
     ),
   lastName: z
     .string()
     .min(2, 'Last name must be at least 2 characters long')
     .max(50, 'Last name must not be 50 characters long')
     .refine(
-      (name) =>
-        /^(?!.*-[a-z])[A-Z][a-z'-]*(?:-[A-Z][a-z'-]*)*(?:'[A-Z][a-z'-]*)*$/g.test(
-          name
-        ),
+      (name) => /^(?!.*-[a-z])[A-Z][a-z'-]*(?:-[A-Z][a-z'-]*)*(?:'[A-Z][a-z'-]*)*$/g.test(name),
       {
         message:
           'Last name must be in sentence case, can include hyphen, and apostrophes (e.g., "Ali", "Ade-Bright" or "Smith\'s").',
-      }
+      },
     ),
   email: z.string().email('Please enter a valid email address!'),
   password: z
@@ -86,7 +75,6 @@ export const mainSchema = z.object({
     .refine((value) => verifyPhoneNumber(value), {
       message: 'Invalid nigerian phone number. e.g valid format: 234xxxxxxxxxx',
     }),
-  gender: z.enum([Gender.MALE, Gender.FEMALE, Gender.OTHER, Gender.NONE]),
   token: z.string(),
   userId: z.string().regex(/^[a-f\d]{24}$/i, {
     message: `Invalid userId`,
@@ -130,7 +118,7 @@ export const mainSchema = z.object({
       message: passwordRegexMessage,
     }),
   redirectUrl: z.string().url(),
-})
+});
 
 // Define the partial for partial validation
-export const partialMainSchema = mainSchema.partial()
+export const partialMainSchema = mainSchema.partial();
