@@ -81,24 +81,6 @@ app.use(
 );
 
 /**
- * Configure content security policy (CSP) ==> Prevent cross-site scripting (XSS)
- */
-const contentSecurityPolicy = {
-  directive: {
-    baseUri: ["'self'"],
-    objectSrc: ["'none'"],
-    defaultSrc: ["'self'"],
-    frameAncestors: ["'none'"],
-    upgradeInsecureRequests: [],
-    imgSrc: ["'self'", 'data:', 'https:'],
-    scriptSrc: ["'self'", "'unsafe-inline'"],
-    styleSrc: ["'self'", "'unsafe-inline'"],
-    connectSrc: ["'self'", 'https://api.mapbox.com'],
-    fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-  },
-};
-
-/**
  * Use Helmet middleware for security headers
  */
 app.use(
