@@ -20,6 +20,6 @@ type CatchAsyncFunction = (
 
 export const catchAsync = (fn: CatchAsyncFunction) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    fn(res, req, next).catch(next)
+    fn(req, res, next).catch(next)
   }
 }
