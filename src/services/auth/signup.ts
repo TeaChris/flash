@@ -3,7 +3,7 @@
  * Created Date: Tu Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Tue Aug 05 2025                                              *
+ * Last Modified: Wed Aug 06 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -21,6 +21,8 @@ export const signupService = async (
   req: Request,
 ) => {
   const { email, username, password, isTermAndConditionAccepted } = data;
+
+  console.log(req.body);
 
   if (!email || !username || !password) {
     throw new AppError('Incomplete signup data', 400);
