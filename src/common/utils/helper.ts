@@ -13,7 +13,7 @@
 
 import { ENVIRONMENT } from '@/config';
 import { User } from '@/models/user.model';
-import { IUser,IHashData } from '../interface';
+import { IUser, IHashData } from '../interface';
 
 import bcrypt from 'bcryptjs';
 import { Request } from 'express';
@@ -67,15 +67,11 @@ const toJSON = (obj: IUser, fields?: string[]): Partial<IUser> => {
 };
 
 const hashData = (data: IHashData, options?: SignOptions, secret?: string) => {
-	return jwt.sign(
-		{ ...data },
-		secret ? secret : ENVIRONMENT.JWT.ACCESS_KEY,
-		...[options?.expiresIn ? { expiresIn: options?.expiresIn } : {}]
-	);
+  return jwt.sign({ ...data }, secret ?? ENVIRONMENT.JWT.ACCESS_KEY, options);
 };
 
 const sendVerificationEmail = async (user: Require_id<IUser>, req: Request) => {
-  const emailToken = hashData(data:IHashData);
+  const emailToken = hashData({ id: user._id.toString() });
 };
 
 export { dateFromString, findUserByEmail, findUserByUsername, hashedPassword, toJSON };
