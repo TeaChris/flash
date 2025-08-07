@@ -12,4 +12,5 @@
  */
 export * from './environment';
 export * from './i.hash.data';
+export * from './email.queue';
 export * from './user';
