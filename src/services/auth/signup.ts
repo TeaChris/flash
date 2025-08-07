@@ -19,6 +19,7 @@ import {
 } from '@/common';
 import AppError from '@/common/utils/app.error';
 import { AppResponse } from '@/common/utils/app.response';
+import { redis } from '@/config';
 import { User } from '@/models';
 import { Request } from 'express';
 
@@ -57,9 +58,8 @@ export const signupService = async (
     password: hashedUserPassword,
   });
 
-  await sendVerificationEmail(user.id, req);
+  await sendVerificationEmail(user, req);
 
-  //   set cache also
-
+  await redis.set(user._id.toString(), toJSON(user, ['password']));
   return toJSON(user);
 };
