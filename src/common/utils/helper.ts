@@ -100,4 +100,12 @@ const getDomainReferer = (req: Request) => {
   }
 };
 
-export { dateFromString, findUserByEmail, findUserByUsername, hashedPassword, toJSON };
+export {
+  toJSON,
+  hashedPassword,
+  dateFromString,
+  findUserByEmail,
+  getDomainReferer,
+  findUserByUsername,
+  sendVerificationEmail,
+};
