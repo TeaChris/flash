@@ -12,5 +12,7 @@
  */
 
 export * from './environment';
+export * from './templates';
+export * from './handler';
 export * from './queue';
 export * from './redis';
