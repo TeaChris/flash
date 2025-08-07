@@ -3,7 +3,7 @@
  * Created Date: Sa Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Sat Aug 02 2025                                              *
+ * Last Modified: Thu Aug 07 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -17,15 +17,9 @@
  * and processing jobs from queues.
  */
 
-import { Job } from 'bullmq'
-import { logger } from '@/common'
-import {
-  addJob,
-  createWorker,
-  getJobStatus,
-  clearQueue,
-  closeBullMQConnections,
-} from '@/config/bullmq'
+import { Job } from 'bullmq';
+import { logger } from '@/common';
+import { addJob, createWorker, getJobStatus, clearQueue, closeQueueConnections } from '@/config';
 
 // Queue utility functions
 export const queueUtils = {
@@ -38,9 +32,9 @@ export const queueUtils = {
   async addJob(
     queueName: string,
     jobData: any,
-    options?: { delay?: number; priority?: number; attempts?: number }
+    options?: { delay?: number; priority?: number; attempts?: number },
   ): Promise<string> {
-    return addJob(queueName, jobData, options)
+    return addJob(queueName, jobData, options);
   },
 
   /**
@@ -52,17 +46,17 @@ export const queueUtils = {
   async processQueue(
     queueName: string,
     processor: (jobData: any) => Promise<void>,
-    concurrency = 1
+    concurrency = 1,
   ): Promise<void> {
     // Create a worker to process jobs
     // We wrap the processor function to extract the job data
     createWorker(
       queueName,
       async (job: Job) => {
-        return processor(job.data)
+        return processor(job.data);
       },
-      concurrency
-    )
+      concurrency,
+    );
   },
 
   /**
@@ -71,7 +65,7 @@ export const queueUtils = {
    * @param jobId - The job ID
    */
   async getJobStatus(queueName: string, jobId: string): Promise<any> {
-    return getJobStatus(queueName, jobId)
+    return getJobStatus(queueName, jobId);
   },
 
   /**
@@ -79,9 +73,9 @@ export const queueUtils = {
    * @param queueName - The name of the queue
    */
   async clearQueue(queueName: string): Promise<void> {
-    return clearQueue(queueName)
+    return clearQueue(queueName);
   },
-}
+};
 
 /**
  * Start queue workers for the application
@@ -91,24 +85,24 @@ export const startQueueWorkers = async (): Promise<void> => {
   try {
     // Define job processors for different queues
     const emailProcessor = async (jobData: any) => {
-      logger.info(`Processing email job: ${JSON.stringify(jobData)}`)
+      logger.info(`Processing email job: ${JSON.stringify(jobData)}`);
       // Implement email sending logic here
-    }
+    };
 
     const notificationProcessor = async (jobData: any) => {
-      logger.info(`Processing notification job: ${JSON.stringify(jobData)}`)
+      logger.info(`Processing notification job: ${JSON.stringify(jobData)}`);
       // Implement notification sending logic here
-    }
+    };
 
     // Start queue workers
-    await queueUtils.processQueue('email', emailProcessor, 2) // Process 2 jobs concurrently
-    await queueUtils.processQueue('notification', notificationProcessor)
+    await queueUtils.processQueue('email', emailProcessor, 2); // Process 2 jobs concurrently
+    await queueUtils.processQueue('notification', notificationProcessor);
 
-    logger.info('Queue workers started')
+    logger.info('Queue workers started');
   } catch (error) {
-    logger.error('Error starting queue workers:', error)
+    logger.error('Error starting queue workers:', error);
   }
-}
+};
 
 /**
  * Stop all queue workers and close connections
@@ -116,9 +110,9 @@ export const startQueueWorkers = async (): Promise<void> => {
  */
 export const stopQueueWorkers = async (): Promise<void> => {
   try {
-    await closeBullMQConnections()
-    logger.info('Queue workers stopped')
+    await closeQueueConnections();
+    logger.info('Queue workers stopped');
   } catch (error) {
-    logger.error('Error stopping queue workers:', error)
+    logger.error('Error stopping queue workers:', error);
   }
-}
+};
