@@ -3,7 +3,7 @@
  * Created Date: Su Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Tue Aug 05 2025                                              *
+ * Last Modified: Thu Aug 07 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -87,6 +87,7 @@ const userSchema = new mongoose.Schema<IUser, unknown>(
   },
 );
 
+// pick users who are not deleted/suspended
 userSchema.pre(/^find/, function (this: Model<IUser>, next) {
   if (Object.keys(this['_conditions']).includes('isDeleted')) {
     this.find({ isSuspended: { $ne: true } });
@@ -96,5 +97,10 @@ userSchema.pre(/^find/, function (this: Model<IUser>, next) {
   this.find({ $or: [{ isDeleted: { $ne: true } }, { isSuspended: { $ne: true } }] });
   next();
 });
+
+// hash password before saving to DB
+// userSchema.pre('save', async function (next){
+//   if(!this.is)
+// })
 
 export const User: UserModel = mongoose.model<IUser, UserModel>('User', userSchema);
