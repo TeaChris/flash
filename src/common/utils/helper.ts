@@ -3,7 +3,7 @@
  * Created Date: Fr Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Tue Aug 05 2025                                              *
+ * Last Modified: Thu Aug 07 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -11,10 +11,14 @@
  * ############################################################################### *
  */
 
+import { ENVIRONMENT } from '@/config';
 import { User } from '@/models/user.model';
+import { IUser,IHashData } from '../interface';
 
 import bcrypt from 'bcryptjs';
-import { IUser } from '../interface';
+import { Request } from 'express';
+import { Require_id } from 'mongoose';
+import jwt, { SignOptions } from 'jsonwebtoken';
 
 const dateFromString = async (value: string) => {
   const date = new Date(value);
@@ -60,6 +64,18 @@ const toJSON = (obj: IUser, fields?: string[]): Partial<IUser> => {
   const { refreshToken, loginRetries, lastLogin, password, updatedAt, ...rest } = user;
 
   return rest;
+};
+
+const hashData = (data: IHashData, options?: SignOptions, secret?: string) => {
+	return jwt.sign(
+		{ ...data },
+		secret ? secret : ENVIRONMENT.JWT.ACCESS_KEY,
+		...[options?.expiresIn ? { expiresIn: options?.expiresIn } : {}]
+	);
+};
+
+const sendVerificationEmail = async (user: Require_id<IUser>, req: Request) => {
+  const emailToken = hashData(data:IHashData);
 };
 
 export { dateFromString, findUserByEmail, findUserByUsername, hashedPassword, toJSON };
