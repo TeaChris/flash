@@ -3,7 +3,7 @@
  * Created Date: Th Jul 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Sat Aug 02 2025                                              *
+ * Last Modified: Thu Aug 07 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -11,7 +11,7 @@
  * ############################################################################### *
  */
 
-import { IEnvironment } from '@/common'
+import { IEnvironment } from '@/common';
 
 export const ENVIRONMENT: IEnvironment = {
   APP: {
@@ -31,4 +31,12 @@ export const ENVIRONMENT: IEnvironment = {
     PORT: parseInt(process.env.REDIS_PORT || '6379'),
     PASSWORD: process.env.REDIS_PASSWORD as string,
   },
-}
+  JWT: {
+    REFRESH_KEY: process.env.REFRESH_JWT_KEY!,
+    ACCESS_KEY: process.env.ACCESS_JWT_KEY!,
+  },
+  JWT_EXPIRES_IN: {
+    REFRESH: process.env.REFRESH_JWT_EXPIRES_IN!,
+    ACCESS: process.env.ACCESS_JWT_EXPIRES_IN!,
+  },
+};
