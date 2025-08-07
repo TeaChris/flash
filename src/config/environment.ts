@@ -39,4 +39,8 @@ export const ENVIRONMENT: IEnvironment = {
     REFRESH: process.env.REFRESH_JWT_EXPIRES_IN!,
     ACCESS: process.env.ACCESS_JWT_EXPIRES_IN!,
   },
+  FRONTEND_URL: process.env.FRONTEND_URL!,
+  EMAIL: {
+    API_KEY: process.env.RESEND_API_KEY!,
+  },
 };
