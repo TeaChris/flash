@@ -142,7 +142,7 @@ export const redisClient = createRedisClient();
 export const cacheClient = createCacheClient();
 
 // Cache utility functions
-export const cacheUtils = {
+export const redis = {
   /**
    * Set a value in the cache
    * @param key - The cache key
