@@ -37,4 +37,8 @@ export interface IEnvironment {
     ACCESS: string;
     REFRESH: string;
   };
+  FRONTEND_URL: string;
+  EMAIL: {
+    API_KEY: string;
+  };
 }
