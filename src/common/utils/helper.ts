@@ -19,6 +19,7 @@ import bcrypt from 'bcryptjs';
 import { Request } from 'express';
 import { Require_id } from 'mongoose';
 import jwt, { SignOptions } from 'jsonwebtoken';
+import { queueUtils } from './queue';
 
 const dateFromString = async (value: string) => {
   const date = new Date(value);
@@ -72,6 +73,31 @@ const hashData = (data: IHashData, options?: SignOptions, secret?: string) => {
 
 const sendVerificationEmail = async (user: Require_id<IUser>, req: Request) => {
   const emailToken = hashData({ id: user._id.toString() });
+
+  await queueUtils.addJob(
+    'email',
+    {
+      to: user.email,
+      name: user.username,
+      email: user.email,
+      verificationLink: `${getDomainReferer(req)}/verify-email?token=${emailToken}`,
+    },
+    { priority: 1 },
+  );
+};
+
+const getDomainReferer = (req: Request) => {
+  try {
+    const referer = req.get('x-referer');
+
+    if (!referer) {
+      return `${ENVIRONMENT.FRONTEND_URL}`;
+    }
+
+    return referer;
+  } catch (error) {
+    return null;
+  }
 };
 
 export { dateFromString, findUserByEmail, findUserByUsername, hashedPassword, toJSON };
