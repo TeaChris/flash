@@ -3,14 +3,20 @@
  * Created Date: Tu Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Wed Aug 06 2025                                              *
+ * Last Modified: Thu Aug 07 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
  * Date      	By	Comments                                               *
  * ############################################################################### *
  */
-import { findUserByEmail, findUserByUsername, hashedPassword, toJSON } from '@/common';
+import {
+  findUserByEmail,
+  findUserByUsername,
+  hashedPassword,
+  sendVerificationEmail,
+  toJSON,
+} from '@/common';
 import AppError from '@/common/utils/app.error';
 import { AppResponse } from '@/common/utils/app.response';
 import { User } from '@/models';
@@ -51,7 +57,7 @@ export const signupService = async (
     password: hashedUserPassword,
   });
 
-  //   send verification to email here
+  await sendVerificationEmail(user.id, req);
 
   //   set cache also
 
