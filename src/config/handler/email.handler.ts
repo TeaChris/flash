@@ -38,8 +38,8 @@ export const sendEmail = async (job: EmailJobData) => {
 
   try {
     const dispatch = await resend.emails.send({
-      from: opts.from,
       to: data.to,
+      from: opts.from,
       subject: opts.subject,
       html: opts.template(data),
     });
