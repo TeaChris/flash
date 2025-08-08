@@ -3,7 +3,7 @@
  * Created Date: Th Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Thu Aug 07 2025                                              *
+ * Last Modified: Fri Aug 08 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -16,62 +16,98 @@ import { logger } from '@/common';
 import { ENVIRONMENT } from './environment';
 
 // Redis client for general purpose
+// const createRedisClient = () => {
+//   try {
+//     // Check if Redis URL is defined
+//     const redisUrl = ENVIRONMENT.REDIS.URL;
+//     const redisPassword = ENVIRONMENT.REDIS.PASSWORD;
+
+//     if (!redisUrl) {
+//       logger.warn('Redis URL not configured. Redis functionality will be disabled.');
+//       return null;
+//     }
+
+//     let client: Redis;
+
+//     // Handle Upstash Redis URLs (which use HTTPS)
+//     if (redisUrl.startsWith('https://')) {
+//       logger.info('Using Upstash Redis connection string');
+//       // For Upstash, we need to create a connection string with the password
+//       const connectionString = `redis://:${redisPassword}@${redisUrl.replace('https://', '')}`;
+//       client = new Redis(connectionString, {
+//         tls: { rejectUnauthorized: false },
+//         maxRetriesPerRequest: 3,
+//         enableOfflineQueue: false,
+//         retryStrategy: (times) => {
+//           // Retry connection with exponential backoff
+//           const delay = Math.min(times * 50, 2000);
+//           return delay;
+//         },
+//       });
+//     } else {
+//       // Standard Redis connection
+//       const redisPort = ENVIRONMENT.REDIS.PORT || 6379;
+//       client = new Redis({
+//         host: redisUrl,
+//         port: redisPort,
+//         password: redisPassword,
+//         retryStrategy: (times) => {
+//           // Retry connection with exponential backoff
+//           const delay = Math.min(times * 50, 2000);
+//           return delay;
+//         },
+//         maxRetriesPerRequest: 3,
+//         enableOfflineQueue: false,
+//       });
+//     }
+
+//     client.on('connect', () => {
+//       logger.info('Redis client connected');
+//     });
+
+//     client.on('error', (err) => {
+//       logger.error('Redis client error', err);
+//     });
+
+//     return client;
+//   } catch (error) {
+//     logger.error('Failed to create Redis client:', error);
+//     return null;
+//   }
+// };
+
 const createRedisClient = () => {
   try {
-    // Check if Redis URL is defined
-    const redisUrl = ENVIRONMENT.REDIS.URL;
-    const redisPassword = ENVIRONMENT.REDIS.PASSWORD;
+    const redisUrl = ENVIRONMENT.REDIS.URL; // Paste full Upstash URL here (from dashboard)
 
     if (!redisUrl) {
       logger.warn('Redis URL not configured. Redis functionality will be disabled.');
       return null;
     }
 
-    let client: Redis;
-
-    // Handle Upstash Redis URLs (which use HTTPS)
-    if (redisUrl.startsWith('https://')) {
-      logger.info('Using Upstash Redis connection string');
-      // For Upstash, we need to create a connection string with the password
-      const connectionString = `redis://:${redisPassword}@${redisUrl.replace('https://', '')}`;
-      client = new Redis(connectionString, {
-        tls: { rejectUnauthorized: false },
-        maxRetriesPerRequest: 3,
-        enableOfflineQueue: false,
-        retryStrategy: (times) => {
-          // Retry connection with exponential backoff
-          const delay = Math.min(times * 50, 2000);
-          return delay;
-        },
-      });
-    } else {
-      // Standard Redis connection
-      const redisPort = ENVIRONMENT.REDIS.PORT || 6379;
-      client = new Redis({
-        host: redisUrl,
-        port: redisPort,
-        password: redisPassword,
-        retryStrategy: (times) => {
-          // Retry connection with exponential backoff
-          const delay = Math.min(times * 50, 2000);
-          return delay;
-        },
-        maxRetriesPerRequest: 3,
-        enableOfflineQueue: false,
-      });
-    }
+    const client = new Redis(redisUrl, {
+      tls: {
+        rejectUnauthorized: false, // Needed for Upstash TLS
+      },
+      maxRetriesPerRequest: null, // Prevents 'max retries' crash
+      enableOfflineQueue: false,
+      retryStrategy: (times) => {
+        const delay = Math.min(times * 50, 2000); // exponential backoff
+        return delay;
+      },
+    });
 
     client.on('connect', () => {
-      logger.info('Redis client connected');
+      logger.info('✅ Redis client connected');
     });
 
     client.on('error', (err) => {
-      logger.error('Redis client error', err);
+      logger.error('❌ Redis client error:', err);
     });
 
     return client;
   } catch (error) {
-    logger.error('Failed to create Redis client:', error);
+    logger.error('❌ Failed to create Redis client:', error);
     return null;
   }
 };
