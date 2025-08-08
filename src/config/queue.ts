@@ -3,7 +3,7 @@
  * Created Date: Sa Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Thu Aug 07 2025                                              *
+ * Last Modified: Fri Aug 08 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -17,40 +17,64 @@ import { ENVIRONMENT } from './environment';
 import { logger } from '@/common';
 
 // Define connection options for Redis
+// const getRedisConnectionOptions = (): ConnectionOptions | null => {
+//   try {
+//     // Check if Redis URL is defined
+//     const redisUrl = ENVIRONMENT.REDIS.URL;
+//     const redisPassword = ENVIRONMENT.REDIS.PASSWORD;
+
+//     if (!redisUrl) {
+//       logger.warn('Redis URL not configured. BullMQ functionality will be disabled.');
+//       return null;
+//     }
+
+//     // Handle Upstash Redis URLs (which use HTTPS)
+//     if (redisUrl.startsWith('https://')) {
+//       logger.info('Using Upstash Redis connection string for BullMQ');
+//       // For Upstash, we need to extract host and create connection options
+//       const host = redisUrl.replace('https://', '');
+//       return {
+//         host,
+//         password: redisPassword,
+//         tls: { rejectUnauthorized: false },
+//         maxRetriesPerRequest: 3,
+//         enableOfflineQueue: false,
+//       };
+//     } else {
+//       // Standard Redis connection
+//       const redisPort = ENVIRONMENT.REDIS.PORT || 6379;
+//       return {
+//         host: redisUrl,
+//         port: redisPort,
+//         password: redisPassword || undefined,
+//         maxRetriesPerRequest: 3,
+//         enableOfflineQueue: false,
+//       };
+//     }
+//   } catch (error) {
+//     logger.error('Failed to create Redis connection options:', error);
+//     return null;
+//   }
+// };
+
 const getRedisConnectionOptions = (): ConnectionOptions | null => {
   try {
-    // Check if Redis URL is defined
-    const redisUrl = ENVIRONMENT.REDIS.URL;
-    const redisPassword = ENVIRONMENT.REDIS.PASSWORD;
+    const redisUrl = ENVIRONMENT.REDIS.URL; // Full URL e.g. rediss://default:password@host:6379
 
     if (!redisUrl) {
       logger.warn('Redis URL not configured. BullMQ functionality will be disabled.');
       return null;
     }
 
-    // Handle Upstash Redis URLs (which use HTTPS)
-    if (redisUrl.startsWith('https://')) {
-      logger.info('Using Upstash Redis connection string for BullMQ');
-      // For Upstash, we need to extract host and create connection options
-      const host = redisUrl.replace('https://', '');
-      return {
-        host,
-        password: redisPassword,
-        tls: { rejectUnauthorized: false },
-        maxRetriesPerRequest: 3,
-        enableOfflineQueue: false,
-      };
-    } else {
-      // Standard Redis connection
-      const redisPort = ENVIRONMENT.REDIS.PORT || 6379;
-      return {
-        host: redisUrl,
-        port: redisPort,
-        password: redisPassword || undefined,
-        maxRetriesPerRequest: 3,
-        enableOfflineQueue: false,
-      };
-    }
+    // Pass the full URL directly so BullMQ/ioredis handles credentials & TLS
+    return {
+      url: redisUrl,
+      tls: {
+        rejectUnauthorized: false, // Required for Upstash TLS
+      },
+      maxRetriesPerRequest: null,
+      enableOfflineQueue: false,
+    } as unknown as ConnectionOptions;
   } catch (error) {
     logger.error('Failed to create Redis connection options:', error);
     return null;
