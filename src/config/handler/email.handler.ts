@@ -19,6 +19,8 @@ import { ENVIRONMENT } from '../environment';
 
 const resend = new Resend(ENVIRONMENT.EMAIL.API_KEY);
 
+if (!resend) logger.error('Resend Api Key Needed');
+
 const TEMPLATES = {
   welcomeEmail: {
     subject: 'Welcome to Flash',
