@@ -19,7 +19,14 @@
 
 import { Job } from 'bullmq';
 import { logger } from '@/common';
-import { addJob, createWorker, getJobStatus, clearQueue, closeQueueConnections } from '@/config';
+import {
+  addJob,
+  createWorker,
+  getJobStatus,
+  clearQueue,
+  closeQueueConnections,
+  sendEmail,
+} from '@/config';
 
 // Queue utility functions
 export const queueUtils = {
@@ -89,14 +96,14 @@ export const startQueueWorkers = async (): Promise<void> => {
       // Implement email sending logic here
     };
 
-    const notificationProcessor = async (jobData: any) => {
-      logger.info(`Processing notification job: ${JSON.stringify(jobData)}`);
-      // Implement notification sending logic here
-    };
+    // const notificationProcessor = async (jobData: any) => {
+    //   logger.info(`Processing notification job: ${JSON.stringify(jobData)}`);
+    //   // Implement notification sending logic here
+    // };
 
     // Start queue workers
-    await queueUtils.processQueue('email', emailProcessor, 2); // Process 2 jobs concurrently
-    await queueUtils.processQueue('notification', notificationProcessor);
+    await queueUtils.processQueue('email', sendEmail, 2); // Process 2 jobs concurrently
+    // await queueUtils.processQueue('notification', notificationProcessor);
 
     logger.info('Queue workers started');
   } catch (error) {
