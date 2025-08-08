@@ -11,14 +11,13 @@
  * ############################################################################### *
  */
 import {
+  toJSON,
+  hashedPassword,
   findUserByEmail,
   findUserByUsername,
-  hashedPassword,
   sendVerificationEmail,
-  toJSON,
 } from '@/common';
 import AppError from '@/common/utils/app.error';
-import { AppResponse } from '@/common/utils/app.response';
 import { redis } from '@/config';
 import { User } from '@/models';
 import { Request } from 'express';
