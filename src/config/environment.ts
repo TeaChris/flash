@@ -3,7 +3,7 @@
  * Created Date: Th Jul 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Thu Aug 07 2025                                              *
+ * Last Modified: Fri Aug 08 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -27,9 +27,9 @@ export const ENVIRONMENT: IEnvironment = {
     URL: process.env.CACHE_REDIS_URL as string,
   },
   REDIS: {
-    URL: process.env.REDIS_URL as string,
-    PORT: parseInt(process.env.REDIS_PORT || '6379'),
-    PASSWORD: process.env.REDIS_PASSWORD as string,
+    URL: process.env.QUEUE_REDIS_URL as string,
+    PORT: parseInt(process.env.QUEUE_REDIS_PORT || '6379'),
+    PASSWORD: process.env.QUEUE_REDIS_PASSWORD as string,
   },
   JWT: {
     REFRESH_KEY: process.env.REFRESH_JWT_KEY!,
@@ -41,6 +41,6 @@ export const ENVIRONMENT: IEnvironment = {
   },
   FRONTEND_URL: process.env.FRONTEND_URL!,
   EMAIL: {
-    API_KEY: process.env.RESEND_API_KEY!,
+    API_KEY: process.env.API_KEY!,
   },
 };
