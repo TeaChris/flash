@@ -107,34 +107,34 @@ export const implementEmailQueue = async () => {
 /**
  * Example of how to implement a real-world notification queue
  */
-export const implementNotificationQueue = async () => {
-  // Define the notification processor
-  const processNotificationJob = async (jobData: any) => {
-    const { userId, type, message, data } = jobData;
+// export const implementNotificationQueue = async () => {
+//   // Define the notification processor
+//   const processNotificationJob = async (jobData: any) => {
+//     const { userId, type, message, data } = jobData;
 
-    try {
-      logger.info(`Sending ${type} notification to user ${userId}`);
+//     try {
+//       logger.info(`Sending ${type} notification to user ${userId}`);
 
-      // Here you would implement your notification logic
-      // For example, push notifications, in-app notifications, etc.
+//       // Here you would implement your notification logic
+//       // For example, push notifications, in-app notifications, etc.
 
-      // Simulate sending a notification
-      await new Promise((resolve) => setTimeout(resolve, 300));
+//       // Simulate sending a notification
+//       await new Promise((resolve) => setTimeout(resolve, 300));
 
-      logger.info(`Notification sent successfully to user ${userId}`);
-      return { success: true, userId };
-    } catch (error) {
-      logger.error(`Failed to send notification to user ${userId}:`, error);
-      throw error; // Rethrow to trigger retry mechanism
-    }
-  };
+//       logger.info(`Notification sent successfully to user ${userId}`);
+//       return { success: true, userId };
+//     } catch (error) {
+//       logger.error(`Failed to send notification to user ${userId}:`, error);
+//       throw error; // Rethrow to trigger retry mechanism
+//     }
+//   };
 
-  // Set up the notification queue processor
-  // @ts-ignore
-  await queueUtils.processQueue('notification', processNotificationJob, 10); // Process 10 notifications concurrently
+//   // Set up the notification queue processor
+//   // @ts-ignore
+//   await queueUtils.processQueue('notification', processNotificationJob, 10); // Process 10 notifications concurrently
 
-  logger.info('Notification queue processor initialized');
-};
+//   logger.info('Notification queue processor initialized');
+// };
 
 /**
  * Example of how to start all queue workers when the server starts
@@ -145,7 +145,7 @@ export const startAllQueueWorkers = async () => {
     await implementEmailQueue();
 
     // Initialize notification queue
-    await implementNotificationQueue();
+    // await implementNotificationQueue();
 
     // Add more queue initializations as needed
 
