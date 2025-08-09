@@ -3,7 +3,7 @@
  * Created Date: Th Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Thu Aug 07 2025                                              *
+ * Last Modified: Sat Aug 09 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -23,32 +23,37 @@ if (!resend) logger.error('Resend Api Key Needed');
 
 const TEMPLATES = {
   welcomeEmail: {
-    subject: 'Welcome to Flash',
     template: welcomeEmail,
-    from: 'Flash <no-reply@flash.com>',
+    subject: 'Welcome to Kraft School!',
+    from: ' Kraft School <onboarding@resend.dev>',
   },
 };
 
 export const sendEmail = async (job: EmailJobData) => {
-  const { data, type } = job as EmailJobData;
+  const { type, data } = job as EmailJobData;
 
-  const opts = TEMPLATES[type];
+  const options = TEMPLATES[type];
+
+  if (!options) {
+    logger.error('Email template not found');
+    return;
+  }
 
   logger.info('job send email', job);
-  logger.info(opts.template(data));
-  logger.info('options', opts);
+  logger.info('options', options);
+  logger.info(options.template(data));
 
   try {
     const dispatch = await resend.emails.send({
+      from: options.from,
       to: data.to,
-      from: opts.from,
-      subject: opts.subject,
-      html: opts.template(data),
+      subject: options.subject,
+      html: options.template(data),
     });
-    logger.info(dispatch);
+    logger.info('dispatch', dispatch);
     logger.info(`Resend api successfully delivered ${type} email to ${data.to}`);
   } catch (error) {
-    logger.error(error);
+    logger.error('error', error);
     logger.error(`Resend api failed to deliver ${type} email to ${data.to}` + error);
   }
 };
