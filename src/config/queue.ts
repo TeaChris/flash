@@ -3,7 +3,7 @@
  * Created Date: Sa Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Fri Aug 08 2025                                              *
+ * Last Modified: Sat Aug 09 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -13,7 +13,7 @@
 
 import { Queue, Worker, QueueEvents, Job } from 'bullmq';
 
-import { logger } from '@/common';
+import { EmailJobData, logger } from '@/common';
 import { createRedisClient } from './redis';
 
 // Map to store queues by name
@@ -94,7 +94,7 @@ export const getQueue = (queueName: string): Queue | null => {
 
 export const addJob = async (
   queueName: string,
-  jobData: any,
+  jobData: EmailJobData,
   options?: {
     delay?: number;
     priority?: number;
