@@ -3,7 +3,7 @@
  * Created Date: Fr Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Thu Aug 07 2025                                              *
+ * Last Modified: Sat Aug 09 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -11,6 +11,7 @@
  * ############################################################################### *
  */
 
+import { queueUtils } from './queue';
 import { ENVIRONMENT } from '@/config';
 import { User } from '@/models/user.model';
 import { IUser, IHashData } from '../interface';
@@ -19,7 +20,6 @@ import bcrypt from 'bcryptjs';
 import { Request } from 'express';
 import { Require_id } from 'mongoose';
 import jwt, { SignOptions } from 'jsonwebtoken';
-import { queueUtils } from './queue';
 
 const dateFromString = async (value: string) => {
   const date = new Date(value);
@@ -77,10 +77,13 @@ const sendVerificationEmail = async (user: Require_id<IUser>, req: Request) => {
   await queueUtils.addJob(
     'email',
     {
-      to: user.email,
-      name: user.username,
-      email: user.email,
-      verificationLink: `${getDomainReferer(req)}/verify-email?token=${emailToken}`,
+      type: 'welcomeEmail',
+      data: {
+        to: user.email,
+        username: user.username,
+        email: user.email,
+        verificationLink: `${getDomainReferer(req)}/verify-email?token=${emailToken}`,
+      }
     },
     { priority: 1 },
   );
