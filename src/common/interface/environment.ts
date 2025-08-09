@@ -3,7 +3,7 @@
  * Created Date: Th Jul 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Thu Aug 07 2025                                              *
+ * Last Modified: Sat Aug 09 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -34,8 +34,9 @@ export interface IEnvironment {
     REFRESH_KEY: string;
   };
   JWT_EXPIRES_IN: {
-    ACCESS: string;
+    REFRESH_SECONDS: number;
     REFRESH: string;
+    ACCESS: string;
   };
   FRONTEND_URL: string;
   EMAIL: {
