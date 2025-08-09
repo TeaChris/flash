@@ -36,6 +36,7 @@ export const ENVIRONMENT: IEnvironment = {
     ACCESS_KEY: process.env.ACCESS_JWT_KEY!,
   },
   JWT_EXPIRES_IN: {
+    REFRESH_SECONDS: parseInt(process.env.REFRESH_JWT_EXPIRES_IN_SECONDS!, 10),
     REFRESH: process.env.REFRESH_JWT_EXPIRES_IN!,
     ACCESS: process.env.ACCESS_JWT_EXPIRES_IN!,
   },
