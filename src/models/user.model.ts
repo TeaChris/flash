@@ -3,7 +3,7 @@
  * Created Date: Su Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Thu Aug 07 2025                                              *
+ * Last Modified: Sat Aug 09 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -48,11 +48,11 @@ const userSchema = new mongoose.Schema<IUser, unknown>(
       type: Boolean,
       default: false,
     },
-    refreshToken: {
-      type: String,
-      select: false,
-      default: '',
-    },
+    // refreshToken: {
+    //   type: String,
+    //   select: false,
+    //   default: '',
+    // },
     isEmailVerified: {
       type: Boolean,
       default: false,
