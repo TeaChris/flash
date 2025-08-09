@@ -16,7 +16,7 @@ import { logger } from '@/common';
 import { ENVIRONMENT } from './environment';
 
 // Redis client for general purpose
-const createRedisClient = () => {
+export const createRedisClient = () => {
   try {
     const redisUrl = ENVIRONMENT.REDIS.URL;
 
@@ -30,7 +30,7 @@ const createRedisClient = () => {
         rejectUnauthorized: false, // Needed for Upstash TLS
       },
       maxRetriesPerRequest: null, // Prevents 'max retries' crash
-      enableOfflineQueue: false,
+      enableOfflineQueue: true,
       retryStrategy: (times) => {
         const delay = Math.min(times * 50, 2000); // exponential backoff
         return delay;
