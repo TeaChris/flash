@@ -3,7 +3,7 @@
  * Created Date: Th Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Thu Aug 07 2025                                              *
+ * Last Modified: Sat Aug 09 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -19,7 +19,7 @@ export const welcomeEmail = (data: WelcomeEmailData) => {
 
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
-    <title>Welcome to Flash</title>
+    <title>Welcome to Flash!</title>
   </head>
 
   <body>
@@ -72,7 +72,7 @@ export const welcomeEmail = (data: WelcomeEmailData) => {
               <tbody>
                 <tr>
                   <td>
-                    <p style="font-size:0.875rem;line-height:1.25rem;margin:16px 0">This email was sent to <span style="color:rgb(43,144,142);font-weight:500;text-decoration-line:underline">${data.email}</span> because you signed up for an account on AbegHelp.me</p>
+                    <p style="font-size:0.875rem;line-height:1.25rem;margin:16px 0">This email was sent to <span style="color:rgb(43,144,142);font-weight:500;text-decoration-line:underline">${data.email}</span> because you signed up for an account on Flash</p>
                     <p style="font-size:14px;line-height:24px;margin:16px 0">© 2025 Flash</p>
                     </p>
                   </td>
