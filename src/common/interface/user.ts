@@ -11,6 +11,9 @@
  * ############################################################################### *
  */
 
+import { Model } from 'mongoose';
+import type { SignOptions } from 'jsonwebtoken';
+
 import { Role } from '../constants';
 
 export interface IUser {
@@ -29,3 +32,12 @@ export interface IUser {
   isEmailVerified: boolean;
   isTermAndConditionAccepted: boolean;
 }
+
+export interface UserMethods extends Omit<IUser, 'toJSON'> {
+  generateAccessToken(options?: SignOptions): string;
+  generateRefreshToken(options?: SignOptions): string;
+  verifyPassword(enteredPassword: string): Promise<boolean>;
+  toJSON(excludedFields?: Array<keyof IUser>): object;
+}
+
+export type UserModel = Model<IUser, UserMethods>;
