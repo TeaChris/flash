@@ -3,7 +3,7 @@
  * Created Date: Sa Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Thu Aug 07 2025                                              *
+ * Last Modified: Sat Aug 09 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -90,17 +90,6 @@ export const queueUtils = {
  */
 export const startQueueWorkers = async (): Promise<void> => {
   try {
-    // Define job processors for different queues
-    const emailProcessor = async (jobData: any) => {
-      logger.info(`Processing email job: ${JSON.stringify(jobData)}`);
-      // Implement email sending logic here
-    };
-
-    // const notificationProcessor = async (jobData: any) => {
-    //   logger.info(`Processing notification job: ${JSON.stringify(jobData)}`);
-    //   // Implement notification sending logic here
-    // };
-
     // Start queue workers
     await queueUtils.processQueue('email', sendEmail, 2); // Process 2 jobs concurrently
     // await queueUtils.processQueue('notification', notificationProcessor);
