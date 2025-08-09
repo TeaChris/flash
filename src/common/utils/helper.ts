@@ -17,6 +17,7 @@ import { User } from '@/models/user.model';
 import { IUser, IHashData } from '../interface';
 
 import bcrypt from 'bcryptjs';
+import { promisify } from 'util';
 import { Request } from 'express';
 import { Require_id } from 'mongoose';
 import jwt, { SignOptions } from 'jsonwebtoken';
@@ -105,8 +106,18 @@ const getDomainReferer = (req: Request) => {
   }
 };
 
+const decodeData = async (token: string, secret?: string) => {
+  const verifyAsync: (arg1: string, arg2: string) => jwt.JwtPayload = promisify(jwt.verify);
+  console.log(secret);
+
+  const verify = await verifyAsync(token, secret ? secret : ENVIRONMENT.JWT.ACCESS_KEY!);
+  return verify;
+};
+
 export {
   toJSON,
+  hashData,
+  decodeData,
   hashedPassword,
   dateFromString,
   findUserByEmail,
