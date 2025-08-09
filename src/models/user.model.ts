@@ -11,14 +11,15 @@
  * ############################################################################### *
  */
 
-import mongoose, { Model } from 'mongoose';
+import mongoose, { HydratedDocument, Model } from 'mongoose';
+import bcrypt from 'bcryptjs';
 
-import { IUser } from '@/common';
+import { IUser, UserMethods } from '@/common';
 import { Role } from '@/common/constants';
 
-type UserModel = Model<IUser, unknown>;
+type UserModel = Model<IUser, unknown, UserMethods>;
 
-const userSchema = new mongoose.Schema<IUser, unknown>(
+const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
   {
     username: {
       type: String,
@@ -98,9 +99,23 @@ userSchema.pre(/^find/, function (this: Model<IUser>, next) {
   next();
 });
 
-// hash password before saving to DB
-// userSchema.pre('save', async function (next){
-//   if(!this.is)
-// })
+// verify user password
+userSchema.method(
+  'verifyPassword',
+  async function (this: HydratedDocument<IUser>, password: string) {
+    if (!this.password) return false;
 
-export const User: UserModel = mongoose.model<IUser, UserModel>('User', userSchema);
+    const isValid = await bcrypt.compare(password, this.password);
+    return isValid;
+  },
+);
+
+// hash password before saving to DB
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+  this.password = await bcrypt.hash(this.password, 12);
+  next();
+});
+
+export const User =
+  (mongoose.models.User as UserModel) || mongoose.model<IUser, UserModel>('User', userSchema);
