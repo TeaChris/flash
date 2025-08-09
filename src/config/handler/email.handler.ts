@@ -39,14 +39,14 @@ export const sendEmail = async (job: EmailJobData) => {
     return;
   }
 
-  logger.info('job send email', job);
   logger.info('options', options);
+  logger.info('job send email', job);
   logger.info(options.template(data));
 
   try {
     const dispatch = await resend.emails.send({
-      from: options.from,
       to: data.to,
+      from: options.from,
       subject: options.subject,
       html: options.template(data),
     });
