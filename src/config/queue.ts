@@ -11,35 +11,10 @@
  * ############################################################################### *
  */
 
-import { Queue, Worker, QueueEvents, Job, ConnectionOptions } from 'bullmq';
+import { Queue, Worker, QueueEvents, Job } from 'bullmq';
 
-import { ENVIRONMENT } from './environment';
 import { logger } from '@/common';
-
-// Define connection options for Redis
-const getRedisConnectionOptions = (): ConnectionOptions | null => {
-  try {
-    const redisUrl = ENVIRONMENT.REDIS.URL; // Full URL e.g. rediss://default:password@host:6379
-
-    if (!redisUrl) {
-      logger.warn('Redis URL not configured. BullMQ functionality will be disabled.');
-      return null;
-    }
-
-    // Pass the full URL directly so BullMQ/ioredis handles credentials & TLS
-    return {
-      url: redisUrl,
-      tls: {
-        rejectUnauthorized: false, // Required for Upstash TLS
-      },
-      maxRetriesPerRequest: null,
-      enableOfflineQueue: false,
-    } as unknown as ConnectionOptions;
-  } catch (error) {
-    logger.error('Failed to create Redis connection options:', error);
-    return null;
-  }
-};
+import { createRedisClient } from './redis';
 
 // Map to store queues by name
 const queues = new Map<string, Queue>();
@@ -62,7 +37,7 @@ export const getQueue = (queueName: string): Queue | null => {
   }
 
   // Get Redis connection options
-  const connectionOptions = getRedisConnectionOptions();
+  const connectionOptions = createRedisClient();
   if (!connectionOptions) {
     return null;
   }
@@ -178,7 +153,7 @@ export const createWorker = (
   }
 
   // Get Redis connection options
-  const connectionOptions = getRedisConnectionOptions();
+  const connectionOptions = createRedisClient();
   if (!connectionOptions) {
     logger.warn(`Queue disabled: cannot create worker for queue ${queueName}`);
     return null;
