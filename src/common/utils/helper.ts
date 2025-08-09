@@ -20,6 +20,7 @@ import bcrypt from 'bcryptjs';
 import { promisify } from 'util';
 import { Request } from 'express';
 import { Require_id } from 'mongoose';
+import type { CookieOptions, Response } from 'express';
 import jwt, { SignOptions } from 'jsonwebtoken';
 
 const dateFromString = async (value: string) => {
@@ -114,9 +115,21 @@ const decodeData = async (token: string, secret?: string) => {
   return verify;
 };
 
+const setCookie = (res: Response, name: string, value: string, options: CookieOptions = {}) => {
+  res.cookie(name, value, {
+    httpOnly: true,
+    secure: ENVIRONMENT.APP.ENV === 'production',
+    path: '/',
+    sameSite: ENVIRONMENT.APP.ENV === 'production' ? 'none' : 'lax',
+    partitioned: ENVIRONMENT.APP.ENV === 'production',
+    ...options,
+  });
+};
+
 export {
   toJSON,
   hashData,
+  setCookie,
   decodeData,
   hashedPassword,
   dateFromString,
