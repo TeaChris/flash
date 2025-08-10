@@ -12,5 +12,6 @@
  */
 
 export * from './refresh.token';
+export * from './verify.email';
 export * from './signup';
 export * from './signin';
