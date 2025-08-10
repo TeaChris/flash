@@ -3,7 +3,7 @@
  * Created Date: Su Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Sat Aug 09 2025                                              *
+ * Last Modified: Sun Aug 10 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -69,6 +69,11 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
     },
     verificationToken: {
       type: String,
+      select: false,
+    },
+    loginRetries: {
+      type: Number,
+      default: 0,
       select: false,
     },
     role: {
