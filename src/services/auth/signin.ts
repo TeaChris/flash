@@ -62,7 +62,6 @@ export async function signInService(req: any, res: any) {
     {
       loginRetries: 0,
       lastLogin: DateTime.now(),
-      refreshToken,
     },
     { new: true },
   )) as IUser;
@@ -80,7 +79,7 @@ export async function signInService(req: any, res: any) {
     JSON.stringify({
       ...toJSON(updatedUser, ['password']),
       refreshToken,
-      expiresInMinutes: cacheDurationMinutes,
+      // expiresInMinutes: cacheDurationMinutes,
     }),
     cacheDurationMinutes * 60,
   );
