@@ -46,13 +46,11 @@ export const signupService = async (
     throw new AppError('Username already exists', 400);
   }
 
-  const hashedUserPassword = await hashedPassword(password);
-
   const user = await User.create({
     email,
     username,
     isTermAndConditionAccepted,
-    password: hashedUserPassword,
+    password,
   });
 
   await sendVerificationEmail(user, req);
