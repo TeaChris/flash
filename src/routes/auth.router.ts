@@ -11,7 +11,7 @@
  * ############################################################################### *
  */
 
-import { signInController, signupController } from '@/controllers';
+import { signInController, signupController, refreshTokenHandler } from '@/controllers';
 
 import { Router } from 'express';
 
@@ -19,5 +19,6 @@ const router = Router();
 
 router.post('/signup', signupController);
 router.post('/signin', signInController);
+router.post('/refresh-token', refreshTokenHandler);
 
 export { router as authRouter };
