@@ -16,7 +16,6 @@ import { catchAsync } from '@/middlewares';
 import { verifyEmailService } from '@/services';
 
 export const verifyEmailController = catchAsync(async (req, res) => {
-  const data = await verifyEmailService(req, res);
-
+  const data = await verifyEmailService({ token: req.body.token }, req);
   AppResponse(res, 200, data.message, data);
 });
