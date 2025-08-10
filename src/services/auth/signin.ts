@@ -23,6 +23,7 @@ import { User } from '@/models';
 
 export async function signInService(req: Request, res: Response) {
   const { email, password } = req.body;
+
   if (!email || !password) throw new AppError('Email and password are required', 401);
 
   const user = await User.findOne({ email }).select(
