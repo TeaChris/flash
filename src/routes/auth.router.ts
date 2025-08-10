@@ -11,7 +11,12 @@
  * ############################################################################### *
  */
 
-import { signInController, signupController, refreshTokenHandler } from '@/controllers';
+import {
+  signInController,
+  signupController,
+  refreshTokenHandler,
+  verifyEmailController,
+} from '@/controllers';
 
 import { Router } from 'express';
 
@@ -19,6 +24,7 @@ const router = Router();
 
 router.post('/signup', signupController);
 router.post('/signin', signInController);
+router.post('/verify-email', verifyEmailController);
 router.post('/refresh-token', refreshTokenHandler);
 
 export { router as authRouter };
