@@ -21,7 +21,7 @@ import AppError from '@/common/utils/app.error';
 import { ENVIRONMENT, redis } from '@/config';
 import { User } from '@/models';
 
-export async function signInService(req: any, res: any) {
+export async function signInService(req: Request, res: Response) {
   const { email, password } = req.body;
   if (!email || !password) throw new AppError('Email and password are required', 401);
 
