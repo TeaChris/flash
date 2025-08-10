@@ -3,7 +3,7 @@
  * Created Date: We Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Wed Aug 06 2025                                              *
+ * Last Modified: Sun Aug 10 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -11,11 +11,13 @@
  * ############################################################################### *
  */
 
-import { signupController } from '@/controllers';
+import { signInController, signupController } from '@/controllers';
+
 import { Router } from 'express';
 
 const router = Router();
 
 router.post('/signup', signupController);
+router.post('/signin', signInController);
 
 export { router as authRouter };
