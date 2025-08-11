@@ -3,7 +3,7 @@
  * Created Date: Su Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Sun Aug 10 2025                                              *
+ * Last Modified: Mon Aug 11 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -25,7 +25,7 @@ export interface IUser {
   username: string;
   password: string;
   ipAddress: string;
-  verificationToken;
+  verificationToken: string | null;
   isDeleted: boolean;
   isSuspended: boolean;
   loginRetries: number;
