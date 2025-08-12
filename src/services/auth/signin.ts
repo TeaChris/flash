@@ -3,7 +3,7 @@
  * Created Date: Sa Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Sun Aug 10 2025                                              *
+ * Last Modified: Mon Aug 11 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -94,8 +94,5 @@ export async function signInService(req: Request, res: Response) {
     maxAge: 24 * 60 * 60 * 1000, // 24 hrs
   });
 
-  return {
-    user: toJSON(updatedUser),
-    message: 'Sign in successful',
-  };
+  return toJSON(updatedUser);
 }
