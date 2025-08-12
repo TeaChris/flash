@@ -74,7 +74,11 @@ const hashData = (data: IHashData, options?: SignOptions, secret?: string) => {
 };
 
 const sendVerificationEmail = async (user: Require_id<IUser>, req: Request) => {
-  const emailToken = hashData({ id: user._id.toString() });
+  const emailToken = hashData(
+    { id: user._id.toString() },
+    { expiresIn: '15m' },
+    ENVIRONMENT.JWT.ACCESS_KEY,
+  );
 
   await queueUtils.addJob(
     'email',
@@ -95,7 +99,8 @@ const sendVerificationEmail = async (user: Require_id<IUser>, req: Request) => {
 
 const getDomainReferer = (req: Request) => {
   try {
-    const referer = req.get('x-referrer');
+    // Check both x-referrer and x-referer headers
+    const referer = req.get('x-referrer') || req.get('x-referer');
 
     if (!referer) {
       return `${ENVIRONMENT.FRONTEND_URL}`;
