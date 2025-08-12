@@ -3,7 +3,7 @@
  * Created Date: Fr Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Wed Aug 06 2025                                              *
+ * Last Modified: Mon Aug 11 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -12,3 +12,4 @@
  */
 export * from './error.controller';
 export * from './auth';
+export * from './user';
