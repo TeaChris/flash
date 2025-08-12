@@ -22,7 +22,7 @@ import { timeoutMiddleware, validateDataWithZod } from '@/middlewares';
 import { logger, stream, stopQueueWorkers } from '@/common';
 import { ENVIRONMENT, stopRedisConnections } from '@/config';
 import { errorHandler } from '@/controllers';
-import { authRouter } from '@/routes';
+import { authRouter, userRouter } from '@/routes';
 
 dotenv.config();
 
@@ -172,6 +172,7 @@ app.use('/api/v1/alive', (req: Request, res: Response) => {
   });
 });
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/users', userRouter);
 
 app.use(errorHandler);
 
