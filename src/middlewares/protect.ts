@@ -3,7 +3,7 @@
  * Created Date: Sa Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Sat Aug 09 2025                                              *
+ * Last Modified: Tue Aug 12 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -17,18 +17,11 @@ import AppError from '@/common/utils/app.error';
 import { authenticate, setCookie } from '@/common';
 
 export const protect = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  //   get the cookie from the request headers
-  const { flashAccessToken, flashRefreshToken } = req.cookie;
+  const { flashAccessToken, flashRefreshToken } = req.cookies;
 
   const { currentUser, accessToken } = await authenticate({ flashAccessToken, flashRefreshToken });
+  if (accessToken) setCookie(res, 'flashAccessToken', accessToken, { maxAge: 15 * 60 * 1000 });
 
-  if (accessToken) {
-    setCookie(res, 'flashAccessToken', accessToken, {
-      maxAge: 15 * 60 * 1000, // 15 minutes
-    });
-  }
-
-  //   attach the user to the request
   req.user = currentUser;
 
   const reqPath = req.path;
