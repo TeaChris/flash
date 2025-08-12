@@ -3,7 +3,7 @@
  * Created Date: Su Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Sun Aug 10 2025                                              *
+ * Last Modified: Tue Aug 12 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -15,6 +15,8 @@ import AppError from '@/common/utils/app.error';
 import { decodeData, IUser, toJSON } from '@/common';
 import { redis } from '@/config';
 import { User } from '@/models';
+
+import { Request } from 'express';
 
 export const verifyEmailService = async (data: { token: string }, req: Request) => {
   const { token } = data;
