@@ -3,7 +3,7 @@
  * Created Date: Sa Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Mon Aug 11 2025                                              *
+ * Last Modified: Tue Aug 12 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -37,7 +37,13 @@ export const authenticate = async ({
     //       currentUser,
     //       accessToken: flashAccessToken,
     //     };
-    throw new AppError('Unauthorized', 401);
+    const decoded = jwt.verify(flashAccessToken, ENVIRONMENT.JWT.ACCESS_KEY) as { id: string };
+    const user = await User.findById(decoded.id).select('+isSuspended +isEmailVerified');
+    if (!user || user.isSuspended) throw new AppError('Unauthorized', 401);
+    if (!user.isEmailVerified)
+      throw new AppError('Your email is yet to be verified', 422, `email-unverified:${user.email}`);
+    return { currentUser: user };
+    // throw new AppError('Unauthorized', 401);
   }
 
   //   if (flashRefreshToken) {
@@ -47,6 +53,14 @@ export const authenticate = async ({
   //       accessToken: flashAccessToken,
   //     };
   //   }
+
+  if (!flashRefreshToken) throw new AppError('Refresh token is required', 401);
+  const payload = jwt.verify(flashRefreshToken, ENVIRONMENT.JWT.REFRESH_KEY) as {
+    id: string;
+    jti: string;
+  };
+  const exists = await redis.get(`refresh:${payload.jti}`);
+  if (!exists) throw new AppError('Invalid or expired refresh token', 401);
 
   const handleUserVerification = async (decoded) => {
     // fetch user from redis cache or db
