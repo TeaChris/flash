@@ -4,6 +4,7 @@
     "files": true
   },
   "compilerOptions": {
+    "typeRoots": ["node_modules/@types", "src/types"],
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
     /* Basic Options */
     // "incremental": true,                         /* Enable incremental compilation */
