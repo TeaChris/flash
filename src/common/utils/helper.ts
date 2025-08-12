@@ -95,7 +95,7 @@ const sendVerificationEmail = async (user: Require_id<IUser>, req: Request) => {
 
 const getDomainReferer = (req: Request) => {
   try {
-    const referer = req.get('x-referer');
+    const referer = req.get('x-referrer');
 
     if (!referer) {
       return `${ENVIRONMENT.FRONTEND_URL}`;
@@ -107,13 +107,8 @@ const getDomainReferer = (req: Request) => {
   }
 };
 
-const decodeData = async (token: string, secret?: string) => {
-  const verifyAsync: (arg1: string, arg2: string) => jwt.JwtPayload = promisify(jwt.verify);
-  console.log(secret);
-
-  const verify = await verifyAsync(token, secret ? secret : ENVIRONMENT.JWT.ACCESS_KEY!);
-  return verify;
-};
+const decodeData = (token: string, secret?: string) =>
+  jwt.verify(token, secret ?? ENVIRONMENT.JWT.ACCESS_KEY!) as jwt.JwtPayload;
 
 const setCookie = (res: Response, name: string, value: string, options: CookieOptions = {}) => {
   res.cookie(name, value, {
