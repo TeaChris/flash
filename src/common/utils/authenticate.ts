@@ -3,7 +3,7 @@
  * Created Date: Sa Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Sat Aug 09 2025                                              *
+ * Last Modified: Mon Aug 11 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -17,7 +17,7 @@ import { Require_id } from 'mongoose';
 import { User } from '@/models';
 import AppError from './app.error';
 import { ENVIRONMENT, redis } from '@/config';
-import { decodeData, hashData, IUser, logger } from '@/common';
+import { decodeData, hashData, IUser, logger, toJSON } from '@/common';
 
 type AuthenticateResult = {
   currentUser: Require_id<IUser>;
@@ -74,6 +74,16 @@ export const authenticate = async ({
 
     // csrf protection
     // browser client fingerprinting
+    if (decoded.fingerprint !== user.fingerprint) {
+      throw new AppError('Session expired, please log in again!', 401);
+    }
+
+    const userToCache = { ...user, _id: user._id.toString() };
+    await redis.set(
+      decoded.id,
+      toJSON(userToCache, ['password', '__v', 'refreshToken']),
+      ENVIRONMENT.JWT_EXPIRES_IN.REFRESH_SECONDS,
+    );
 
     return user;
   };
