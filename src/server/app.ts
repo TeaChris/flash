@@ -18,7 +18,12 @@ import helmet, { HelmetOptions } from 'helmet';
 import express, { Application, NextFunction, Request, Response } from 'express';
 import mongoSanitize from 'express-mongo-sanitize';
 
-import { timeoutMiddleware, validateDataWithZod } from '@/middlewares';
+import {
+  timeoutMiddleware,
+  validateDataWithZod,
+  csrfProtection,
+  setCsrfToken,
+} from '@/middlewares';
 import { logger, stream, stopQueueWorkers } from '@/common';
 import { ENVIRONMENT, stopRedisConnections } from '@/config';
 import { errorHandler } from '@/controllers';
@@ -165,6 +170,13 @@ app.use(timeoutMiddleware);
  * Initialize routes
  */
 app.use(validateDataWithZod);
+
+// Set CSRF token cookie for all requests
+app.use(setCsrfToken);
+
+// Apply CSRF protection to all routes except auth
+app.use(csrfProtection);
+
 app.use('/api/v1/alive', (req: Request, res: Response) => {
   res.status(200).json({
     status: 'success',
