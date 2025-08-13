@@ -3,7 +3,7 @@
  * Created Date: Fr Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Wed Aug 06 2025                                              *
+ * Last Modified: Tue Aug 12 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -11,12 +11,6 @@
  * ############################################################################### *
  */
 
-// import {
-//   Country,
-//   FundraiserEnum,
-//   VerifyTimeBased2faTypeEnum,
-//   twoFactorTypeEnum,
-// } from '@/common/constants'
 import { dateFromString } from '@/common';
 import { PhoneNumberUtil } from 'google-libphonenumber';
 import * as z from 'zod';
@@ -34,15 +28,14 @@ const passwordRegexMessage =
 export const mainSchema = z.object({
   username: z
     .string()
-    .min(2, 'Username must be at least 2 characters long')
-    .max(50, 'username must not be 50 characters long')
-    .refine(
-      (name) => /^(?!.*-[a-z])[A-Z][a-z'-]*(?:-[A-Z][a-z'-]*)*(?:'[A-Z][a-z'-]*)*$/g.test(name),
-      {
-        message:
-          'Last name must be in sentence case, can include hyphen, and apostrophes (e.g., "Ali", "Ade-Bright" or "Smith\'s").',
-      },
-    ),
+    .min(3, 'Username must be at least 3 characters long')
+    .max(30, 'Username must not be more than 30 characters long')
+    .regex(/^[a-zA-Z0-9_-]+$/, {
+      message: 'Username can only contain letters, numbers, hyphens, and underscores',
+    })
+    .refine((name) => !/^(admin|root|system|test|guest|user|demo|temp|tmp)$/i.test(name), {
+      message: 'Username cannot be a reserved word',
+    }),
   email: z.string().email('Please enter a valid email address!'),
   password: z
     .string()
