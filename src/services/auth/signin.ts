@@ -3,7 +3,7 @@
  * Created Date: Sa Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Tue Aug 12 2025                                              *
+ * Last Modified: Wed Aug 13 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -29,13 +29,13 @@ export async function signInService(req: Request, res: Response) {
   const user = await User.findOne({ email }).select(
     '+isSuspended +isEmailVerified +password +loginRetries +lastLogin',
   );
-  if (!user) throw new AppError('Email or password is incorrect', 401);
+  if (!user) throw new AppError('Incorrect credentials', 401);
 
   // Password check
   const isPasswordValid = await user.verifyPassword(password);
   if (!isPasswordValid) {
     await User.findByIdAndUpdate(user._id, { $inc: { loginRetries: 1 } });
-    throw new AppError('Email or password is incorrect', 401);
+    throw new AppError('Incorrect credentials', 401);
   }
 
   if (!user.isEmailVerified) {
@@ -46,10 +46,9 @@ export async function signInService(req: Request, res: Response) {
   if (user.isSuspended) throw new AppError('Your account is currently suspended', 401);
 
   // generate tokens
-  const accessToken = await hashData(
-    { id: user._id.toString() },
-    { expiresIn: ENVIRONMENT.JWT_EXPIRES_IN.ACCESS },
-  );
+  const accessToken = jwt.sign({ id: user._id.toString() }, ENVIRONMENT.JWT.ACCESS_KEY, {
+    expiresIn: ENVIRONMENT.JWT_EXPIRES_IN.ACCESS,
+  });
 
   // generate refresh token
   const jti = uuidv4();
