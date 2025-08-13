@@ -14,17 +14,17 @@
 import {
   signInController,
   signupController,
+  signoutController,
   refreshTokenHandler,
   verifyEmailController,
-  signoutController,
 } from '@/controllers';
-
-import { Router } from 'express';
 import {
   authRateLimiter,
   refreshTokenRateLimiter,
   emailVerificationRateLimiter,
 } from '@/middlewares';
+
+import { Router } from 'express';
 
 const router = Router();
 
