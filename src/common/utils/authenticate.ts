@@ -46,7 +46,8 @@ export const authenticate = async ({
         '+isSuspended +isEmailVerified',
       )) as Require_id<IUser>;
       if (!user) {
-        throw new AppError('User not found', 401);
+        // user not found ---- but to not expose too mush info i decided to use
+        throw new AppError('Authentication failed', 401);
       }
 
       // Cache user data (without sensitive fields)
@@ -92,8 +93,18 @@ export const authenticate = async ({
       // Verify and fetch user
       const currentUser = await verifyAndFetchUser(payload.id);
 
-      // Rotate refresh token (delete old, create new)
+      // Check for token reuse (security measure)
+      const tokenUsed = await redis.get(`used:${payload.jti}`);
+      if (tokenUsed) {
+        // Token has been used before - potential replay attack
+        await redis.del(`refresh:${payload.jti}`);
+        throw new AppError('Token reuse detected', 401);
+      }
+
+      // Mark token as used and delete it
+      await redis.set(`used:${payload.jti}`, '1', 60); // Keep for 1 minute
       await redis.del(`refresh:${payload.jti}`);
+
       const newJti = uuidv4();
       const newRefreshToken = jwt.sign(
         { id: payload.id, jti: newJti },
