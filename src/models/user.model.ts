@@ -3,7 +3,7 @@
  * Created Date: Su Aug 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Sun Aug 10 2025                                              *
+ * Last Modified: Tue Aug 12 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -49,11 +49,6 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
       type: Boolean,
       default: false,
     },
-    // refreshToken: {
-    //   type: String,
-    //   select: false,
-    //   default: '',
-    // },
     isEmailVerified: {
       type: Boolean,
       default: false,
@@ -118,7 +113,7 @@ userSchema.method(
 // hash password before saving to DB
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
-  this.password = await bcrypt.hash(this.password, 12);
+  this.password = await bcrypt.hash(this.password, 14);
   next();
 });
 
