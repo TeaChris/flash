@@ -14,9 +14,9 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
 
-import { AppResponse } from '@/common';
-import { catchAsync } from '@/middlewares';
+import { AppResponse, clearCookies, logger } from '@/common';
 import { ENVIRONMENT, redis } from '@/config';
+import { catchAsync } from '@/middlewares';
 
 export const signoutController = catchAsync(async (req: Request, res: Response) => {
   const token = req.cookies?.flashRefreshToken;
@@ -26,31 +26,24 @@ export const signoutController = catchAsync(async (req: Request, res: Response) 
       // Verify refresh token and extract jti
       const payload = jwt.verify(token, ENVIRONMENT.JWT.REFRESH_KEY) as { jti: string };
 
-      // Delete refresh token from Redis
       await redis.del(`refresh:${payload.jti}`);
     } catch (error) {
       // Token is invalid/expired, but we still want to clear cookies
-      console.log('Invalid refresh token during logout:', error);
+      // Log without sensitive information
+      logger.warn('Invalid refresh token during logout');
     }
   }
 
-  // Clear auth cookies with same options as when they were set
-  res.clearCookie('flashAccessToken', {
+  // Clear auth cookies with proper security settings
+  clearCookies(res, ['flashAccessToken', 'flashRefreshToken'], {
     httpOnly: true,
     secure: ENVIRONMENT.APP.ENV === 'production',
     sameSite: ENVIRONMENT.APP.ENV === 'production' ? 'none' : 'lax',
     path: '/',
   });
 
-  res.clearCookie('flashRefreshToken', {
-    httpOnly: true,
-    secure: ENVIRONMENT.APP.ENV === 'production',
-    sameSite: ENVIRONMENT.APP.ENV === 'production' ? 'none' : 'lax',
-    path: '/',
-  });
-
-  // Clear CSRF token cookie
-  res.clearCookie('csrfToken', {
+  // Clear CSRF token cookie (must be accessible to JavaScript)
+  clearCookies(res, ['csrfToken'], {
     httpOnly: false,
     secure: ENVIRONMENT.APP.ENV === 'production',
     sameSite: ENVIRONMENT.APP.ENV === 'production' ? 'none' : 'lax',
