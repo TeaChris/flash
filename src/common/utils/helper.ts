@@ -126,11 +126,24 @@ const setCookie = (res: Response, name: string, value: string, options: CookieOp
   });
 };
 
+const clearCookies = (res: Response, cookieNames: string[], options: CookieOptions = {}) => {
+  cookieNames.forEach((name) => {
+    res.clearCookie(name, {
+      httpOnly: options.httpOnly ?? true,
+      secure: options.secure ?? ENVIRONMENT.APP.ENV === 'production',
+      sameSite: options.sameSite ?? (ENVIRONMENT.APP.ENV === 'production' ? 'none' : 'lax'),
+      path: options.path ?? '/',
+      ...(options.domain && { domain: options.domain }),
+    });
+  });
+};
+
 export {
   toJSON,
   hashData,
   setCookie,
   decodeData,
+  clearCookies,
   hashedPassword,
   dateFromString,
   findUserByEmail,
