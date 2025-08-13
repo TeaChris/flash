@@ -3,7 +3,7 @@
  * Created Date: Th Jul 2025                                                   *
  * Author: Boluwatife Olasunkanmi O.                                           *
  * -----                                                                       *
- * Last Modified: Sat Aug 09 2025                                              *
+ * Last Modified: Tue Aug 12 2025                                              *
  * Modified By: Boluwatife Olasunkanmi O.                                      *
  * -----                                                                       *
  * HISTORY:                                                                    *
@@ -12,6 +12,50 @@
  */
 
 import { IEnvironment } from '@/common';
+
+// Environment variable validation
+const validateEnvironment = () => {
+  const requiredVars = [
+    'DATABASE_URL',
+    'CACHE_REDIS_URL',
+    'QUEUE_REDIS_URL',
+    'REFRESH_JWT_KEY',
+    'ACCESS_JWT_KEY',
+    'REFRESH_JWT_EXPIRES_IN_SECONDS',
+    'REFRESH_JWT_EXPIRES_IN',
+    'ACCESS_JWT_EXPIRES_IN',
+    'FRONTEND_URL',
+    'API_KEY',
+  ];
+
+  const missingVars = requiredVars.filter((varName) => !process.env[varName]);
+
+  if (missingVars.length > 0) {
+    throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`);
+  }
+
+  // Validate JWT keys length
+  if (process.env.REFRESH_JWT_KEY!.length < 32) {
+    throw new Error('REFRESH_JWT_KEY must be at least 32 characters long');
+  }
+
+  if (process.env.ACCESS_JWT_KEY!.length < 32) {
+    throw new Error('ACCESS_JWT_KEY must be at least 32 characters long');
+  }
+
+  // Validate URLs
+  try {
+    new URL(process.env.DATABASE_URL!);
+    new URL(process.env.CACHE_REDIS_URL!);
+    new URL(process.env.QUEUE_REDIS_URL!);
+    new URL(process.env.FRONTEND_URL!);
+  } catch (error) {
+    throw new Error('Invalid URL format in environment variables');
+  }
+};
+
+// Validate environment on import
+validateEnvironment();
 
 export const ENVIRONMENT: IEnvironment = {
   APP: {
