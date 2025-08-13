@@ -34,6 +34,7 @@
     "helmet-csp": "^4.0.0",
     "hpp": "^0.2.3",
     "ioredis": "^5.7.0",
+    "isomorphic-dompurify": "^2.26.0",
     "jsonwebtoken": "^9.0.2",
     "luxon": "^3.7.1",
     "module-alias": "^2.2.3",
