@@ -55,7 +55,7 @@ const app: Application = express();
  *  Express Configuration
  */
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal']); // trust proxy for rate limit
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 app.use(express.json({ limit: '10kb' }));
 app.use(cookieParser());
 
@@ -78,10 +78,27 @@ app.use(
 /**
  * Middleware to allow CORS
  */
+const allowedOrigins = [
+  ENVIRONMENT.FRONTEND_URL,
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token', 'x-referrer'],
   }),
 );
 
@@ -133,11 +150,24 @@ app.use(helmet.hidePoweredBy());
 app.use(helmet.dnsPrefetchControl());
 app.use(helmet.permittedCrossDomainPolicies());
 app.use(helmet.frameguard({ action: 'deny' }));
-// Prevent browser from caching sensitive information
+
+// Additional security headers
 app.use((req, res, next) => {
+  // Prevent browser from caching sensitive information
   res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
   res.set('Pragma', 'no-cache');
   res.set('Expires', '0');
+
+  // Additional security headers
+  res.set('X-Content-Type-Options', 'nosniff');
+  res.set('X-Frame-Options', 'DENY');
+  res.set('X-XSS-Protection', '1; mode=block');
+  res.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+
+  // Remove server information
+  res.removeHeader('X-Powered-By');
+
   next();
 });
 // Data sanitization against NoSQL query injection
@@ -165,6 +195,19 @@ app.use((req: Request, res: Response, next: NextFunction) => {
  * Error handler middlewares
  */
 app.use(timeoutMiddleware);
+
+// Add request timeout protection
+app.use((req, res, next) => {
+  // Set timeout for all requests
+  req.setTimeout(30000, () => {
+    res.status(408).json({
+      status: 'error',
+      message: 'Request timeout',
+    });
+  });
+
+  next();
+});
 
 /**
  * Initialize routes
